@@ -87,13 +87,13 @@ spi& spi::operator=(spi&& other) noexcept(true)
 
 void spi::transmit(const packet& payload)
 {
-    if (payload.size < 1) {
+    if (payload.size() < 1) {
         throw error(WHEN("can't send a packet with <1 bytes."));
     }
 
     packet p;
     p.append(d->csPacket(false));
-    p.append({ opcodes::write, uint16_t(payload.size - 1) });
+    p.append({ opcodes::write, uint16_t(payload.size() - 1) });
     p.append(payload);
     p.append(d->csPacket(true));
     d->sendRaw(p);
@@ -102,7 +102,7 @@ void spi::transmit(const packet& payload)
 
 void spi::impl::sendRaw(const packet& p)
 {
-    if (ftdi_write_data(ctxt, const_cast<uint8_t*>(p.buffer), p.size) != p.size) {
+    if (ftdi_write_data(ctxt, const_cast<uint8_t*>(p.data()), p.size()) != p.size()) {
         onError(WHEN("ftdi_write_data"));
     }
 }
@@ -183,17 +183,17 @@ void spi::impl::sync()
 
 void spi::impl::expectResponse(const packet& p)
 {
-    uint8_t buffer[p.size];
-    int rc = ftdi_read_data(ctxt, buffer, p.size);
-    if (rc != p.size) {
+    uint8_t buffer[p.size()];
+    int rc = ftdi_read_data(ctxt, buffer, p.size());
+    if (rc != p.size()) {
         std::ostringstream what;
         what << WHEN()
-             << "expected " << p.size << " byte reply but got "
+             << "expected " << p.size() << " byte reply but got "
              << rc << " bytes.";
         onError(what.str());
     }
 
-    if (memcmp(p.buffer, buffer, p.size) != 0) {
+    if (memcmp(p.data(), buffer, p.size()) != 0) {
         onError(WHEN("did not receive expected reply"));
     }
 }

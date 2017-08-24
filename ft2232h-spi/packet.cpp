@@ -21,9 +21,9 @@
 
 void ft2232h_spi::packet::append(const packet& p)
 {
-    if (p.size + size > sizeof(buffer)) {
+    if (p.size_ + size_ > sizeof(data_)) {
         throw error(WHEN("overflowed buffer constructing packet."));
     }
-    memcpy(&buffer[size], p.buffer, p.size);
-    size += p.size;
+    memcpy(&data_[size_], p.data_, p.size_);
+    size_ += p.size_;
 }

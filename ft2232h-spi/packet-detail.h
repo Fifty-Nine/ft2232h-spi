@@ -50,9 +50,9 @@ size_t pack_impl(uint8_t *buffer, T&& arg, Args&&... args)
 
 template<class... Args>
 packet::packet(Args&&... args) :
-    size {
-        (uint8_t)detail::pack_impl<sizeof(buffer)>(
-            buffer, std::forward<Args>(args)...
+    size_ {
+        (uint8_t)detail::pack_impl<sizeof(data_)>(
+            data_, std::forward<Args>(args)...
         )
     }
 {

@@ -17,20 +17,26 @@
 #ifndef FT2232H_SPI_PACKET_H
 #define FT2232H_SPI_PACKET_H
 
+#include <cstddef>
 #include <cstdint>
 
 namespace ft2232h_spi
 {
 
-struct packet
+class packet
 {
+public:
     template<class... Args>
     packet(Args&&... args);
 
     void append(const packet& p);
 
-    uint8_t buffer[16];
-    uint8_t size = 0;
+    const uint8_t *data() const { return data_; }
+    size_t size() const { return size_; }
+
+private:
+    uint8_t data_[16];
+    uint8_t size_ = 0;
 };
 
 } /* namespace ft2232h_spi */
