@@ -23,6 +23,7 @@ if (LIBFTDI_FOUND)
         ft2232h-spi-libftdi.cpp
     )
 else()
+    find_package(MPSSE_SPI REQUIRED)
     set(ft2232h-spi_SOURCE_FILES
         ${ft2232h-spi_SOURCE_FILES}
         ft2232h-spi-libmpsse-spi.cpp
@@ -47,8 +48,10 @@ set(ft2232h-spi_INCLUDE_DIR "${CMAKE_INSTALL_PREFIX}/include")
 
 if (LIBFTDI_FOUND)
     target_link_libraries(ft2232h-spi ${LIBFTDI_LIBRARIES})
+    set(ft2232h-spi_LIBRARY_DIRS ${LIBFTDI_LIBRARY_DIRS})
 else()
-	target_link_libraries(ft2232h-spi libmpsse)
+    target_link_libraries(ft2232h-spi libmpsse)
+    set(ft2232h-spi_LIBRARY_DIRS ${LIBMPSSE_SPI_LIBRARY_DIRS})
 endif()
 
 include(CMakePackageConfigHelpers)
@@ -67,7 +70,7 @@ configure_package_config_file(
     cmake/ft2232h-spi-config.cmake.in
     "${CMAKE_CURRENT_BINARY_DIR}/ft2232h-spi-config.cmake"
     INSTALL_DESTINATION "${ConfigPackageLocation}"
-    PATH_VARS ft2232h-spi_INCLUDE_DIR
+    PATH_VARS ft2232h-spi_INCLUDE_DIR ft2232h-spi_LIBRARY_DIRS
 )
 
 

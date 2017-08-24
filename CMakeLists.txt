@@ -11,14 +11,13 @@ set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 include_directories(${CMAKE_SOURCE_DIR})
 
-find_package(FTDI)
+find_package(LibFTDI1)
 if (LIBFTDI_FOUND)
-	include_directories(${LIBFTDI_INCLUDE_DIR})
-	link_directories(${LIBFTDI_LIBRARIES})
+    include_directories(${LIBFTDI_INCLUDE_DIR})
+    link_directories(${LIBFTDI_LIBRARY_DIRS})
 else()
-    find_package(MPSSE_SPI REQUIRED)
 	include_directories(${LIBMPSSE_SPI_INCLUDE_DIR})
-	link_directories(${LIBMPSSE_SPI_LIBRARIES})
+    link_directories(${LIBMPSSE_SPI_LIBRARY_DIRS})
 endif()
 
 find_package(
