@@ -43,16 +43,7 @@ set_target_properties(
     ft2232h-spi PROPERTIES
     PRIVATE_HEADER "${ft2232h-spi_PRIVATE_HEADERS}"
 )
-
-install(
-    TARGETS ft2232h-spi
-    EXPORT ft2232h-spi
-    ARCHIVE DESTINATION lib
-    LIBRARY DESTINATION lib
-    PUBLIC_HEADER DESTINATION include
-    PRIVATE_HEADER DESTINATION include/ft2232h-spi
-)
-install(EXPORT ft2232h-spi NAMESPACE ft2232h_spi_ DESTINATION share/ft2232h-spi)
+set(ft2232h-spi_INCLUDE_DIR "${CMAKE_INSTALL_PREFIX}/include")
 
 if (LIBFTDI_FOUND)
     target_link_libraries(ft2232h-spi ${LIBFTDI_LIBRARIES})
@@ -60,5 +51,31 @@ else()
 	target_link_libraries(ft2232h-spi libmpsse)
 endif()
 
-set(ft2232h-spi_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}
-    CACHE INTERNAL "ft2232h-spi: Include Directories" FORCE)
+include(CMakePackageConfigHelpers)
+set(ConfigPackageLocation "lib/cmake/ft2232h-spi")
+install(
+    TARGETS ft2232h-spi
+    EXPORT ft2232h-spiTargets
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    PUBLIC_HEADER DESTINATION include
+    PRIVATE_HEADER DESTINATION include/ft2232h-spi
+)
+install(EXPORT ft2232h-spiTargets DESTINATION ${ConfigPackageLocation})
+
+configure_package_config_file(
+    cmake/ft2232h-spi-config.cmake.in
+    "${CMAKE_CURRENT_BINARY_DIR}/ft2232h-spi-config.cmake"
+    INSTALL_DESTINATION "${ConfigPackageLocation}"
+    PATH_VARS ft2232h-spi_INCLUDE_DIR
+)
+
+
+install(
+    FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/ft2232h-spi-config.cmake"
+    DESTINATION
+        ${ConfigPackageLocation}
+)
+
+
