@@ -17,7 +17,7 @@
 #ifndef FT2232H_SPI_PACKET_H
 #define FT2232H_SPI_PACKET_H
 
-#include "packet-detail.h"
+#include <cstdint>
 
 namespace ft2232h_spi
 {
@@ -25,9 +25,7 @@ namespace ft2232h_spi
 struct packet
 {
     template<class... Args>
-    packet(Args&&... args) :
-    size { (uint8_t)detail::pack(buffer, std::forward<Args>(args)...) }
-    { }
+    packet(Args&&... args);
 
     void append(const packet& p);
 
@@ -35,7 +33,10 @@ struct packet
     uint8_t size = 0;
 };
 
-
 } /* namespace ft2232h_spi */
+
+#define FT2232H_SPI_INCLUDE_PACKET_DETAIL_H
+#include "packet-detail.h"
+#undef FT2232H_SPI_INCLUDE_PACKET_DETAIL_H
 
 #endif /* FT2232H_SPI_PACKET_H */

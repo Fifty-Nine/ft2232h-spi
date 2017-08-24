@@ -14,11 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef FT2232H_SPI_PACKET_DETAIL_H
-#define FT2232H_SPI_PACKET_DETAIL_H
+#ifndef FT2232H_SPI_INCLUDE_PACKET_DETAIL_H
+#error "This file should not be included directly."
+#endif /* FT2232H_SPI_INCLUDE_PACKET_DETAIL_H */
 
 #include <cstring>
-#include <cstdint>
 #include <type_traits>
 #include <utility>
 
@@ -46,13 +46,16 @@ size_t pack_impl(uint8_t *buffer, T&& arg, Args&&... args)
     );
 }
 
-template<size_t Size, class... Args>
-size_t pack(uint8_t (&buffer)[Size], Args&&... args)
+} /* namespace detail */
+
+template<class... Args>
+packet::packet(Args&&... args) :
+    size {
+        (uint8_t)detail::pack_impl<sizeof(buffer)>(
+            buffer, std::forward<Args>(args)...
+        )
+    }
 {
-    return pack_impl<Size>(buffer, std::forward<Args>(args)...);
 }
 
-} /* namespace detail */
 } /* namespace ft2232h_spi */
-
-#endif /* FT2232H_SPI_PACKET_DETAIL_H */
