@@ -1,3 +1,5 @@
+project(ft2232h-spi)
+
 cmake_minimum_required(VERSION 3.5)
 
 set(PACKAGE_VERSION 0.1)
@@ -19,4 +21,20 @@ else()
 	link_directories(${LIBMPSSE_SPI_LIBRARIES})
 endif()
 
+find_package(
+    Boost
+    1.62.0
+    COMPONENTS unit_test_framework
+)
+
 add_subdirectory(ft2232h-spi)
+
+if (Boost_UNIT_TEST_FRAMEWORK_FOUND)
+    enable_testing()
+    add_subdirectory(ft2232h-spi-tests)
+else ()
+    message(
+        WARNING
+        "Boost unit test framework not found. Unit tests will not be built."
+    )
+endif ()

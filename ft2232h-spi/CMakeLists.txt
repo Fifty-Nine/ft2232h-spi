@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(ft2232h-spi)
-
 set(ft2232h-spi_PUBLIC_HEADERS
     ft2232h-spi.h
 )
@@ -57,7 +55,7 @@ install(
 install(EXPORT ft2232h-spi NAMESPACE ft2232h_spi_ DESTINATION share/ft2232h-spi)
 
 if (LIBFTDI_FOUND)
-    target_link_libraries(ft2232h-spi ftdi)
+    target_link_libraries(ft2232h-spi ${LIBFTDI_LIBRARIES})
 else()
 	target_link_libraries(ft2232h-spi libmpsse)
 endif()
