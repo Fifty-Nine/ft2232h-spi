@@ -38,7 +38,7 @@ size_t pack_impl(uint8_t *buffer, T&& arg, Args&&... args)
         std::is_pod<std::remove_reference<T>>(),
         "Cannot pack a non-POD into a buffer."
     );
-    static_assert(sizeof(T) < Size, "Buffer overflow when expanding a pack.");
+    static_assert(sizeof(T) <= Size, "Buffer overflow when expanding a pack.");
 
     memcpy(buffer, &arg, sizeof(T));
     return sizeof(T) + pack_impl<Size - sizeof(T)>(
