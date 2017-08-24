@@ -44,7 +44,7 @@ constexpr uint8_t bad_opcode_reply = 0xfa;
 
 struct spi::impl
 {
-    impl(pins cs_pin) :
+    impl(pins cs_pin, busses bus) :
         ctxt(getContext()),
         cs_pin(cs_pin)
     {
@@ -60,6 +60,7 @@ struct spi::impl
 
     struct ftdi_context *ctxt;
     pins cs_pin;
+    busses bus;
 };
 
 spi::~spi()
@@ -67,9 +68,9 @@ spi::~spi()
 }
 
 spi::spi(
-    pins cs, const endpoint& ep)
+    pins cs, const endpoint& ep, busses bus)
     noexcept(false) :
-    d(new impl { cs })
+    d(new impl { cs, bus })
 {
     d->init(ep);
 }
@@ -121,7 +122,7 @@ packet spi::impl::csPacket(bool cs_high)
 
 void spi::impl::init(const endpoint& ep)
 {
-    if (ftdi_set_interface(ctxt, INTERFACE_A)) {
+    if (ftdi_set_interface(ctxt, (ftdi_interface)bus)) {
         onError(WHEN("ftdi_set_interface"));
     }
 

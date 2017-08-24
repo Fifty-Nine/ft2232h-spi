@@ -65,22 +65,29 @@ struct spi
 {
 public:
     enum pins : uint8_t {
-        adbus0 = 0x01,
-        adbus1 = 0x02,
-        adbus2 = 0x04,
-        adbus3 = 0x08,
-        adbus4 = 0x10,
-        adbus5 = 0x20,
-        adbus6 = 0x40,
-        adbus7 = 0x80,
+        dbus0 = 0x01,
+        dbus1 = 0x02,
+        dbus2 = 0x04,
+        dbus3 = 0x08,
+        dbus4 = 0x10,
+        dbus5 = 0x20,
+        dbus6 = 0x40,
+        dbus7 = 0x80,
 
-        sck = adbus0,
-        sdata = adbus1
+        sck = dbus0,
+        sdata = dbus1
+    };
+    enum busses : uint8_t {
+        bus_any = 0,
+        bus_a = 1,
+        bus_b = 2,
+        bus_c = 3,
+        bus_d = 4
     };
 
     virtual ~spi() noexcept(true);
 
-    spi(pins cs_pin, const endpoint& ep);
+    spi(pins cs_pin, const endpoint& ep, busses bus = bus_a);
     spi(const spi&) = delete;
     spi(spi&&) noexcept(true);
 
